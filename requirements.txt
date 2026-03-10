@@ -1,0 +1,6 @@
+python-dateutil
+requests
+python-dotenv
+google-auth
+google-api-python-client
+tenacity
