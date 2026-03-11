@@ -1,0 +1,39 @@
+name: Sync Notion to Google Calendar
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: 
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Criar arquivo de credenciais do Google
+        run: |
+          echo "$GCAL_CREDENTIALS_JSON" > credentials.json
+        env:
+          GCAL_CREDENTIALS_JSON: ${{ secrets.GCAL_CREDENTIALS_JSON }}
+
+      - name: Executar o script
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+          GCAL_CALENDAR_ID: ${{ secrets.GCAL_CALENDAR_ID }}
+          GCAL_CREDENTIALS_PATH: credentials.json
+        run: python main.py
