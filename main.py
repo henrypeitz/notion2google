@@ -54,15 +54,15 @@ def fetch_notion_items(db_id: str, cursor: Optional[str] = None) -> Dict:
         "Content-Type": "application/json"
     }
     
-    # Filtro incremental: apenas itens modificados nos últimos 10 dias
-    dez_dias_atras = (datetime.now(timezone.utc) - timedelta(days=10)).isoformat()
+    # Filtro incremental: apenas itens modificados no último dia
+    um_dia_atras = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
     
     # Adicionamos a tipagem explícita aqui: Dict[str, Any]
     body: Dict[str, Any] = {
         "filter": {
             "timestamp": "last_edited_time",
             "last_edited_time": {
-                "on_or_after": dez_dias_atras
+                "on_or_after": um_dia_atras
             }
         }
     }
